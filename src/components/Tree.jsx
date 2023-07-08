@@ -9,8 +9,8 @@ import { useGLTF } from '@react-three/drei'
 export function Tree(props) {
   const { nodes, materials } = useGLTF('/models/tree.gltf')
   return (
-    <group {...props} dispose={null} scale={[0.125, 0.125, 0.125]}>
-      <mesh geometry={nodes['tree-spruce'].geometry} material={materials.color_main} />
+    <group {...props} dispose={null} scale={[0.125, 0.125, 0.125]} castShadow={true}>
+      <mesh geometry={nodes['tree-spruce'].geometry} material={materials.color_main}  castShadow={true}/>
     </group>
   )
 }

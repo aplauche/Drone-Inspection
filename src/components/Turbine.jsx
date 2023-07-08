@@ -5,18 +5,28 @@ Command: npx gltfjsx@6.2.5 public/models/turbine.gltf
 
 import React, { useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 
 export function Turbine(props) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF('/models/turbine.gltf')
   const { actions } = useAnimations(animations, group)
+
+
+  const blades = useRef()
+  console.log(actions)
+
+  useFrame((state, delta) => {
+    blades.current.rotation.z += delta
+  })
+
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group ref={group} {...props} dispose={null} castShadow={true}>
       <group name="Scene">
         <group name="Wind_turbine_001">
           <mesh name="Wind_turbine_001_Wind_turbine_Circle001" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle001.geometry} material={materials.gray} />
           <mesh name="Wind_turbine_001_Wind_turbine_Circle001_1" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle001_1.geometry} material={materials.red} />
-          <group name="Wind_turbine_001_Blades" position={[0.008, 4.384, 0.489]}>
+          <group ref={blades} name="Wind_turbine_001_Blades" position={[0.008, 4.384, 0.489]}>
             <mesh name="Wind_turbine_001_Wind_turbine_Circle000" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle000.geometry} material={materials.gray} />
             <mesh name="Wind_turbine_001_Wind_turbine_Circle000_1" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle000_1.geometry} material={materials.red} />
           </group>

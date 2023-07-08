@@ -1,4 +1,4 @@
-import { Cloud, Float, OrbitControls, PerspectiveCamera, Sky, useScroll } from "@react-three/drei";
+import { Cloud, ContactShadows, Float, OrbitControls, PerspectiveCamera, Sky, SoftShadows, useHelper, useScroll } from "@react-three/drei";
 import { useMemo, useRef } from "react";
 import Background from "./Background";
 import { Barn } from "./Barn";
@@ -8,6 +8,7 @@ import { Turbine } from "./Turbine";
 import * as THREE from 'three'
 import { useFrame } from "@react-three/fiber";
 import { Helo } from "./Helo";
+// import Grass from "./Grass";
 
 
 const LINE_NB_POINTS = 1000;
@@ -25,6 +26,7 @@ export const Experience = () => {
   const cameraGroup = useRef()
   const cameraRail = useRef()
 
+  //const shadowHelper = useHelper
 
 
   const curvePoints = useMemo(() => {
@@ -89,7 +91,6 @@ export const Experience = () => {
     const scrollOffset = Math.max(0, scroll.offset)
 
     // get the scroll speed to affect drone tilt
-    console.log(scroll.offset - lastScroll.current)
     let tilt = (scroll.offset - lastScroll.current) * 10
 
     tilt = Math.min(tilt, Math.PI / 8)
@@ -228,9 +229,8 @@ export const Experience = () => {
 
       <group ref={cameraGroup} >
         <Background />
-        {/* <Background backgroundColors={backgroundColors} /> */}
         {/* <group ref={cameraRail}> */}
-          <PerspectiveCamera ref={camera} position={[0, 3.6, 10]} fov={30} makeDefault />
+          <PerspectiveCamera ref={camera} position={[0, 3.5, 10]} fov={30} makeDefault />
         {/* </group> */}
         <group ref={airplane} position={[0, 3.2, 5]}>
           <Float floatIntensity={1} speed={1.5} rotationIntensity={0.5}>
@@ -248,13 +248,23 @@ export const Experience = () => {
         </group>
       </group>
 
+      <directionalLight position={[2,3,1]} intensity={0.6} castShadow={true}  shadow-mapSize={1024}/>
+
+      <ambientLight intensity={0.2} />
+
+      <SoftShadows />
+
+      {/* <ContactShadows position-y={0} opacity={1} scale={2000} blur={1} far={100} resolution={256} color="#000000" /> */}
 
 
-      <ambientLight intensity={0.5} />
-      <mesh rotation-x={- Math.PI / 2}>
-        <meshBasicMaterial  color={"#b8dbab"} fog={true} />
+
+      <mesh rotation-x={- Math.PI / 2} receiveShadow={true}>
+        <meshStandardMaterial  color={"#b8dbab"} />
         <planeGeometry args={[2000, 2000]} />
+        {/* <shadowMaterial transparent opacity={0.2} /> */}
       </mesh>
+
+      {/* <Grass /> */}
       {/* <Barn /> */}
 
       {/* TREES */}
@@ -283,7 +293,7 @@ export const Experience = () => {
       </group>
 
       {/* LINE */}
-      <group position-y={3}>
+      <group position-y={2.8}>
         <mesh>
           <extrudeGeometry
             args={[
