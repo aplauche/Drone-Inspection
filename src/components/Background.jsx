@@ -17,16 +17,16 @@ export default function Background(props) {
   });
 
 
-  //const gradientRef = useRef();
+  const gradientRef = useRef();
   const gradientEnvRef = useRef();
 
   useFrame(() => {
-    // gradientRef.current.colorA = new THREE.Color(
-    //   backgroundColors.current.colorA
-    // );
-    // gradientRef.current.colorB = new THREE.Color(
-    //   backgroundColors.current.colorB
-    // );
+    gradientRef.current.colorA = new THREE.Color(
+      backgroundColors.current.colorA
+    );
+    gradientRef.current.colorB = new THREE.Color(
+      backgroundColors.current.colorB
+    );
     gradientEnvRef.current.colorA = new THREE.Color(
       backgroundColors.current.colorA
     );
@@ -38,7 +38,7 @@ export default function Background(props) {
 
   return (
     <>
-      {/* <Sphere scale={[500, 500, 500]} rotation-y={Math.PI / 2}>
+      <Sphere scale={[150, 150, 150]} rotation-y={Math.PI / 2}>
         <LayerMaterial color={"#ffffff"} side={THREE.BackSide}>
           <Gradient
             ref={gradientRef}
@@ -47,7 +47,7 @@ export default function Background(props) {
             end={end}
           />
         </LayerMaterial>
-      </Sphere> */}
+      </Sphere>
       <Environment resolution={256} frames={Infinity}>
         <Sphere
           scale={[100, 100, 100]}

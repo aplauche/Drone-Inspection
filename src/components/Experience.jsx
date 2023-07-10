@@ -8,6 +8,7 @@ import { Turbine } from "./Turbine";
 import * as THREE from 'three'
 import { useFrame } from "@react-three/fiber";
 import { Helo } from "./Helo";
+import TextSection from "./TextSection";
 // import Grass from "./Grass";
 
 
@@ -63,6 +64,34 @@ export const Experience = () => {
   }, [curve]);
 
 
+  // TEXT SECTIONS
+
+  const textSections = useMemo(() => {
+    return [
+      {
+        cameraRailDist: 1,
+        position: new THREE.Vector3(
+          curvePoints[2].x + 1.75,
+          curvePoints[2].y + 4,
+          curvePoints[2].z + 4
+        ),
+        title: "Turbine Inspection",
+        subtitle: `Identify critical weak points before failure`,
+      },
+      {
+        cameraRailDist: -1.25,
+        position: new THREE.Vector3(
+          curvePoints[3].x + 2,
+          curvePoints[3].y + 5,
+          curvePoints[3].z + 2.5
+        ),
+        title: "Solar Panel Arrays",
+        subtitle: `Locate underperforming or damaged cells.`,
+      }
+    ];
+  }, []);
+
+
 
   const scroll = useScroll()
   const lastScroll = useRef(0)
@@ -109,24 +138,24 @@ export const Experience = () => {
     let resetCameraRail = true;
     let friction = 1;
 
-    // // check out distance to text sections
-    // textSections.forEach(textSection => {
-    //   const distance = textSection.position.distanceTo(cameraGroup.current.position)
+    // check out distance to text sections
+    textSections.forEach(textSection => {
+      const distance = textSection.position.distanceTo(cameraGroup.current.position)
 
-    //   if(distance < PROXIMITY_EFFECT_DISTANCE){
-    //     friction = Math.max(distance /  PROXIMITY_EFFECT_DISTANCE, 0.1);
-    //     // slide camera
-    //     const targetCameraRailPosition = new Vector3((1 - distance / PROXIMITY_EFFECT_DISTANCE) * textSection.cameraRailDist, 0, 0);
-    //     cameraRail.current.position.lerp(targetCameraRailPosition, delta);
-    //     resetCameraRail = false;
-    //   }
-    // })
+      if(distance < PROXIMITY_EFFECT_DISTANCE){
+        friction = Math.max(distance /  PROXIMITY_EFFECT_DISTANCE, 0.05);
+        // slide camera
+        const targetCameraRailPosition = new THREE.Vector3((1 - distance / PROXIMITY_EFFECT_DISTANCE) * textSection.cameraRailDist, 0, 0);
+        cameraRail.current.position.lerp(targetCameraRailPosition, delta);
+        resetCameraRail = false;
+      }
+    })
 
-    // // if the previuos proximity effect has not run then we lerp back to normal path
-    // if (resetCameraRail) {
-    //   const targetCameraRailPosition = new Vector3(0, 0, 0);
-    //   cameraRail.current.position.lerp(targetCameraRailPosition, delta);
-    // }
+    // if the previuos proximity effect has not run then we lerp back to normal path
+    if (resetCameraRail) {
+      const targetCameraRailPosition = new THREE.Vector3(0, 0, 0);
+      cameraRail.current.position.lerp(targetCameraRailPosition, delta);
+    }
 
 
     // CALCULATE LERPED SCROLL OFFSET
@@ -224,14 +253,14 @@ export const Experience = () => {
 
       {/* <PerspectiveCamera ref={camera} position={[30, 10, 30]} fov={30} makeDefault/> */}
 
-      <Sky distance={45000} sunPosition={[0, 0.5, 0.7]} inclination={0} azimuth={0.25} />
+      {/* <Sky distance={45000} sunPosition={[0, 0.5, 0.7]} inclination={0} azimuth={0.25} fog={true}/> */}
 
 
       <group ref={cameraGroup} >
         <Background />
-        {/* <group ref={cameraRail}> */}
+        <group ref={cameraRail}>
           <PerspectiveCamera ref={camera} position={[0, 3.5, 10]} fov={30} makeDefault />
-        {/* </group> */}
+        </group>
         <group ref={airplane} position={[0, 3.2, 5]}>
           <Float floatIntensity={1} speed={1.5} rotationIntensity={0.5}>
             <Helo scale={[0.2,0.2,0.2]} rotation-y={Math.PI - 0.2} />
@@ -283,7 +312,10 @@ export const Experience = () => {
       ))}
 
 
-
+      {/* TEXT */}
+      {textSections.map((textSection, idx) => (
+        <TextSection {...textSection} key={idx} />
+      ))}
       
       <group position={[20, 0, -200]}>
         <Turbine />

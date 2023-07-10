@@ -7,7 +7,7 @@ function App() {
   return (
     <Canvas shadows camera={{ position: [3, 3, 3], fov: 30 }}>
       <color attach="background" args={["#ececec"]} />
-      <fog attach="fog" args={["#cde0c5", 70, 160]} />
+      <fog attach="fog" args={["#e8e8ff", 70, 160]} />
       <ScrollControls pages={20} damping={0.3}>
 
         <Experience />
