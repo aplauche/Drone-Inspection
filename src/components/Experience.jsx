@@ -196,6 +196,9 @@ export const Experience = () => {
       cameraGroup.current.position.clone().add(lookAt)
     );
 
+
+
+
     // Airplane rotation
 
     // const tangent = curve.getTangent(scrollOffset + CURVE_AHEAD_AIRPLANE);
@@ -256,10 +259,10 @@ export const Experience = () => {
       {/* <Sky distance={45000} sunPosition={[0, 0.5, 0.7]} inclination={0} azimuth={0.25} fog={true}/> */}
 
 
-      <group ref={cameraGroup} >
+      <group ref={cameraGroup}>
         <Background />
         <group ref={cameraRail}>
-          <PerspectiveCamera ref={camera} position={[0, 3.5, 10]} fov={30} makeDefault />
+          <PerspectiveCamera ref={camera} position={[0, 4, 10]} fov={30} makeDefault rotation-x={-0.1} />
         </group>
         <group ref={airplane} position={[0, 3.2, 5]}>
           <Float floatIntensity={1} speed={1.5} rotationIntensity={0.5}>
