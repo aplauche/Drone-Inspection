@@ -21,14 +21,14 @@ export function Turbine(props) {
   })
 
   return (
-    <group ref={group} {...props} dispose={null} castShadow={true}>
+    <group ref={group} {...props} dispose={null} >
       <group name="Scene">
         <group name="Wind_turbine_001">
-          <mesh name="Wind_turbine_001_Wind_turbine_Circle001" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle001.geometry} material={materials.gray} />
+          <mesh castShadow={true} name="Wind_turbine_001_Wind_turbine_Circle001" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle001.geometry} material={materials.gray} />
           <mesh name="Wind_turbine_001_Wind_turbine_Circle001_1" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle001_1.geometry} material={materials.red} />
           <group ref={blades} name="Wind_turbine_001_Blades" position={[0.008, 4.384, 0.489]}>
-            <mesh name="Wind_turbine_001_Wind_turbine_Circle000" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle000.geometry} material={materials.gray} />
-            <mesh name="Wind_turbine_001_Wind_turbine_Circle000_1" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle000_1.geometry} material={materials.red} />
+            <mesh castShadow={true} name="Wind_turbine_001_Wind_turbine_Circle000" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle000.geometry} material={materials.gray} />
+            <mesh  castShadow={true} name="Wind_turbine_001_Wind_turbine_Circle000_1" geometry={nodes.Wind_turbine_001_Wind_turbine_Circle000_1.geometry} material={materials.red} />
           </group>
         </group>
       </group>

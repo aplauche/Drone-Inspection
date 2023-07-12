@@ -10,7 +10,9 @@ import { useFrame } from "@react-three/fiber";
 import { Helo } from "./Helo";
 import TextSection from "./TextSection";
 // import Grass from "./Grass";
-
+import { CameraHelper } from 'three';
+import { Drone } from "./Drone";
+import Snow from "./Snow";
 
 const LINE_NB_POINTS = 1000;
 
@@ -26,6 +28,13 @@ export const Experience = () => {
   const airplane = useRef()
   const cameraGroup = useRef()
   const cameraRail = useRef()
+
+  const shadowCam = useRef()
+  const dirLight = useRef()
+
+  const debugMode = false
+
+  useHelper(shadowCam, CameraHelper, 1, 'hotpink')
 
   //const shadowHelper = useHelper
 
@@ -71,8 +80,8 @@ export const Experience = () => {
       {
         cameraRailDist: 1,
         position: new THREE.Vector3(
-          curvePoints[2].x + 1.75,
-          curvePoints[2].y + 4,
+          curvePoints[2].x - 1.75,
+          curvePoints[2].y + 4.5,
           curvePoints[2].z + 4
         ),
         title: "Turbine Inspection",
@@ -81,9 +90,9 @@ export const Experience = () => {
       {
         cameraRailDist: -1.25,
         position: new THREE.Vector3(
-          curvePoints[3].x + 2,
-          curvePoints[3].y + 5,
-          curvePoints[3].z + 2.5
+          curvePoints[3].x + 1.5,
+          curvePoints[3].y + 4.5,
+          curvePoints[3].z +1
         ),
         title: "Solar Panel Arrays",
         subtitle: `Locate underperforming or damaged cells.`,
@@ -197,7 +206,13 @@ export const Experience = () => {
     );
 
 
+    dirLight.current.position.z = cameraGroup.current.position.z - 40
+    dirLight.current.target.position.z = cameraGroup.current.position.z - 45
+    dirLight.current.position.x = cameraGroup.current.position.x - 3
+    dirLight.current.target.position.x = cameraGroup.current.position.x + 2
+    dirLight.current.target.updateMatrixWorld()
 
+    // dirLight.current.target.updateMatrixWorld()
 
     // Airplane rotation
 
@@ -251,10 +266,16 @@ export const Experience = () => {
 
   return (
     <>
-      {/* <OrbitControls /> */}
-      
+      <directionalLight ref={dirLight} castShadow position={[0, 20, -10]} intensity={0.2} shadow-mapSize={3000}>
+        <orthographicCamera ref={shadowCam} attach="shadow-camera" args={[-45, 45, -45, 45, 0.1, 75]} />
+      </directionalLight>
+      { !!debugMode && (
+        <>
+        <OrbitControls />
+        <PerspectiveCamera ref={camera} position={[30, 10, 30]} fov={30} makeDefault/>
+        </>
+      )}
 
-      {/* <PerspectiveCamera ref={camera} position={[30, 10, 30]} fov={30} makeDefault/> */}
 
       {/* <Sky distance={45000} sunPosition={[0, 0.5, 0.7]} inclination={0} azimuth={0.25} fog={true}/> */}
 
@@ -262,11 +283,14 @@ export const Experience = () => {
       <group ref={cameraGroup}>
         <Background />
         <group ref={cameraRail}>
-          <PerspectiveCamera ref={camera} position={[0, 4, 10]} fov={30} makeDefault rotation-x={-0.1} />
+          {!debugMode && (
+            <PerspectiveCamera ref={camera} position={[0, 4, 10]} fov={30} makeDefault rotation-x={-0.1} />
+          )}
         </group>
         <group ref={airplane} position={[0, 3.2, 5]}>
           <Float floatIntensity={1} speed={1.5} rotationIntensity={0.5}>
-            <Helo scale={[0.2,0.2,0.2]} rotation-y={Math.PI - 0.2} />
+            {/* <Helo scale={[0.2,0.2,0.2]} rotation-y={Math.PI - 0.2} /> */}
+            <Drone scale={0.1}/>
             {/* <mesh>
               <boxGeometry args={[0.5,0.5, 2, 2]}/>
               <meshNormalMaterial />
@@ -278,20 +302,23 @@ export const Experience = () => {
             /> */}
           </Float>
         </group>
+
       </group>
 
-      <directionalLight position={[2,3,1]} intensity={0.6} castShadow={true}  shadow-mapSize={1024}/>
 
-      <ambientLight intensity={0.2} />
+      <Snow />
+      
+
+
+      <ambientLight intensity={0.15} />
 
       <SoftShadows />
 
-      {/* <ContactShadows position-y={0} opacity={1} scale={2000} blur={1} far={100} resolution={256} color="#000000" /> */}
 
 
 
       <mesh rotation-x={- Math.PI / 2} receiveShadow={true}>
-        <meshStandardMaterial  color={"#b8dbab"} />
+        <meshStandardMaterial  color={"#eee"} />
         <planeGeometry args={[2000, 2000]} />
         {/* <shadowMaterial transparent opacity={0.2} /> */}
       </mesh>
@@ -303,7 +330,7 @@ export const Experience = () => {
 
       {curvePoints.map((point, idx) => (
         <group key={idx} >
-          <Tree position={[point.x + 3, 0, point.z]} />
+          <Tree position={[point.x + 2, 0, point.z - 2]} />
           <Tree position={[point.x - 3, 0, point.z + 6]} />
           <Tree position={[point.x - 5, 0, point.z -8]} />
           <Tree position={[point.x + 7, 0, point.z - 15]} />
@@ -320,10 +347,10 @@ export const Experience = () => {
         <TextSection {...textSection} key={idx} />
       ))}
       
-      <group position={[20, 0, -200]}>
+      <group position={[28, 0, -200]}>
         <Turbine />
       </group>
-      <group position={[-20, 0, -300]}>
+      <group position={[-28, 0, -303]}>
         <Solar />
       </group>
 
