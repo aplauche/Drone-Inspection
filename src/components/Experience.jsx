@@ -13,6 +13,7 @@ import TextSection from "./TextSection";
 import { CameraHelper } from 'three';
 import { Drone } from "./Drone";
 import Snow from "./Snow";
+import { OilTank } from "./OilTank";
 
 const LINE_NB_POINTS = 1000;
 
@@ -96,6 +97,16 @@ export const Experience = () => {
         ),
         title: "Solar Panel Arrays",
         subtitle: `Locate underperforming or damaged cells.`,
+      },
+      {
+        cameraRailDist: -1.25,
+        position: new THREE.Vector3(
+          curvePoints[4].x - 2.8,
+          curvePoints[4].y + 4.5,
+          curvePoints[4].z +3
+        ),
+        title: "Methane Detection",
+        subtitle: `Inspect aging infrastructure for comprimised components.`,
       }
     ];
   }, []);
@@ -336,6 +347,12 @@ export const Experience = () => {
           <Tree position={[point.x + 7, 0, point.z - 15]} />
           <Tree position={[point.x -6, 0, point.z - 25]} />
 
+          <Tree position={[point.x + 8, 0, point.z - 24]} />
+          <Tree position={[point.x - 12, 0, point.z + 20]} />
+          <Tree position={[point.x - 15, 0, point.z - 35]} />
+          <Tree position={[point.x + 8, 0, point.z - 65]} />
+          <Tree position={[point.x -14, 0, point.z - 70]} />
+
           {/* <Cloud  position-z={point.z-10} position-y={10} position-x={point.x - 6} fog={false} />
           <Cloud  position-z={point.z+20} position-y={10} position-x={point.x + 6} fog={false} /> */}
         </group>
@@ -347,12 +364,22 @@ export const Experience = () => {
         <TextSection {...textSection} key={idx} />
       ))}
       
-      <group position={[28, 0, -200]}>
+      <group position={[
+        curvePoints[2].x + 3, 
+        0, 
+        curvePoints[2].z
+      ]}>
         <Turbine />
+
       </group>
-      <group position={[-28, 0, -303]}>
+      <group position={[curvePoints[3].x - 3, 0, curvePoints[3].z - 3]}>
         <Solar />
       </group>
+      <group position={[curvePoints[4].x + 4.25, 0, curvePoints[4].z]}>
+        <OilTank />
+      </group>
+
+      
 
       {/* LINE */}
       <group position-y={2.8}>
