@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 const Context = createContext();
 
 export const PlayProvider = ({ children }) => {
-  const [play, setPlay] = useState(false);
+  const [play, setPlay] = useState(true);
   const [end, setEnd] = useState(false);
   const [hasScroll, setHasScroll] = useState(false);
 

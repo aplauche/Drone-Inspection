@@ -1,5 +1,5 @@
 import { Cloud, ContactShadows, Float, OrbitControls, PerspectiveCamera, Sky, SoftShadows, useHelper, useScroll } from "@react-three/drei";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useEffect, useLayoutEffect } from "react";
 import Background from "./Background";
 import { Barn } from "./Barn";
 import { Solar } from "./Solar";
@@ -7,13 +7,14 @@ import { Tree } from "./Tree";
 import { Turbine } from "./Turbine";
 import * as THREE from 'three'
 import { useFrame } from "@react-three/fiber";
-import { Helo } from "./Helo";
 import TextSection from "./TextSection";
 // import Grass from "./Grass";
 import { CameraHelper } from 'three';
-import { Drone } from "./Drone";
 import Snow from "./Snow";
 import { OilTank } from "./OilTank";
+import { usePlay } from "../contexts/Play";
+import gsap from "gsap";
+import { Drone } from "./Drone";
 
 const LINE_NB_POINTS = 1000;
 
@@ -33,11 +34,12 @@ export const Experience = () => {
   const shadowCam = useRef()
   const dirLight = useRef()
 
+  const {play, setHasScroll, hasScroll, setEnd} = usePlay()
+
   const debugMode = false
 
-  useHelper(shadowCam, CameraHelper, 1, 'hotpink')
+  //useHelper(shadowCam, CameraHelper, 1, 'hotpink')
 
-  //const shadowHelper = useHelper
 
 
   const curvePoints = useMemo(() => {
@@ -91,7 +93,7 @@ export const Experience = () => {
       {
         cameraRailDist: -1.25,
         position: new THREE.Vector3(
-          curvePoints[3].x + 1.5,
+          curvePoints[3].x + 1,
           curvePoints[3].y + 4.5,
           curvePoints[3].z +1
         ),
@@ -120,20 +122,20 @@ export const Experience = () => {
 
   useFrame((state, delta) => {
 
-    // if (window.innerWidth > window.innerHeight) {
-    //   // LANDSCAPE
-    //   camera.current.fov = 30;
-    //   camera.current.position.z = 5;
-    // } else {
-    //   // PORTRAIT
-    //   camera.current.fov = 80;
-    //   camera.current.position.z = 2;
-    // }
+    if (window.innerWidth > window.innerHeight) {
+      // LANDSCAPE
+      camera.current.fov = 36;
+      camera.current.position.z = 10;
+    } else {
+      // PORTRAIT
+      camera.current.fov = 80;
+      camera.current.position.z = 7.5;
+    }
 
-    // // Detect whether use has scrolled
-    // if(lastScroll.current <= 0 && scroll.offset > 0){
-    //   setHasScroll(true)
-    // }
+    // Detect whether use has scrolled
+    if(lastScroll.current <= 0 && scroll.offset > 0){
+      setHasScroll(true)
+    }
 
 
 
@@ -265,25 +267,82 @@ export const Experience = () => {
     // );
     // airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
 
-    // if (
-    //   cameraGroup.current.position.z <
-    //   curvePoints[curvePoints.length - 1].z + 100
-    // ) {
-    //   setEnd(true);
-    //   planeOutTl.current.play();
-    // }
+    if (
+      cameraGroup.current.position.z <
+      curvePoints[curvePoints.length - 1].z + 100
+    ) {
+      setEnd(true);
+      planeOutTl.current.play();
+    }
  
   })
+
+
+  // ANIMATIONS
+
+
+  const planeTl = useRef()
+  const planeOutTl = useRef();
+
+  useLayoutEffect(() => {
+
+    planeTl.current = gsap.timeline()
+
+    planeTl.current.pause()
+    planeTl.current.from(airplane.current.position, {
+      duration: 3,
+      y: -1
+    })
+
+
+    planeOutTl.current = gsap.timeline();
+    planeOutTl.current.pause();
+
+    planeOutTl.current.to(
+      airplane.current.position,
+      {
+        duration: 10,
+        z: -800,
+        y: 10,
+      },
+      0
+    );
+    planeOutTl.current.to(
+      cameraRail.current.position,
+      {
+        duration: 8,
+        y: 5,
+      },
+      0
+    );
+
+  }, []);
+
+  useEffect(() => {
+    if(play){
+      planeTl.current.play()
+    }
+  }, [play])
+
+
 
   return (
     <>
       <directionalLight ref={dirLight} castShadow position={[0, 20, -10]} intensity={0.2} shadow-mapSize={3000}>
         <orthographicCamera ref={shadowCam} attach="shadow-camera" args={[-45, 45, -45, 45, 0.1, 75]} />
       </directionalLight>
+
+      <Snow />
+
+      <ambientLight intensity={0.15} />
+
+      <SoftShadows />
+
+
       { !!debugMode && (
         <>
-        <OrbitControls />
-        <PerspectiveCamera ref={camera} position={[30, 10, 30]} fov={30} makeDefault/>
+          <OrbitControls />
+          <PerspectiveCamera ref={camera} position={[30, 10, 30]} fov={30} makeDefault/>
         </>
       )}
 
@@ -295,47 +354,26 @@ export const Experience = () => {
         <Background />
         <group ref={cameraRail}>
           {!debugMode && (
-            <PerspectiveCamera ref={camera} position={[0, 4, 10]} fov={30} makeDefault rotation-x={-0.1} />
+            <PerspectiveCamera ref={camera} position={[0, 4, 10]} fov={window.innerWidth > window.innerHeight ? 36 : 80} makeDefault rotation-x={-0.1} />
           )}
         </group>
         <group ref={airplane} position={[0, 3.2, 5]}>
           <Float floatIntensity={1} speed={1.5} rotationIntensity={0.5}>
-            {/* <Helo scale={[0.2,0.2,0.2]} rotation-y={Math.PI - 0.2} /> */}
-            <Drone scale={0.1}/>
-            {/* <mesh>
-              <boxGeometry args={[0.5,0.5, 2, 2]}/>
-              <meshNormalMaterial />
-            </mesh> */}
-            {/* <Airplane
-              rotation-y={Math.PI / 2}
-              scale={[0.2, 0.2, 0.2]}
-              position-y={0.1}
-            /> */}
+            <Drone scale={0.1} />
           </Float>
         </group>
-
       </group>
 
 
-      <Snow />
-      
-
-
-      <ambientLight intensity={0.15} />
-
-      <SoftShadows />
 
 
 
-
+      {/* Ground Plane */}
       <mesh rotation-x={- Math.PI / 2} receiveShadow={true}>
         <meshStandardMaterial  color={"#eee"} />
         <planeGeometry args={[2000, 2000]} />
         {/* <shadowMaterial transparent opacity={0.2} /> */}
       </mesh>
-
-      {/* <Grass /> */}
-      {/* <Barn /> */}
 
       {/* TREES */}
 
@@ -364,6 +402,8 @@ export const Experience = () => {
         <TextSection {...textSection} key={idx} />
       ))}
       
+
+
       <group position={[
         curvePoints[2].x + 3, 
         0, 
