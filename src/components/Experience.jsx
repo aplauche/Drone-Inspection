@@ -20,7 +20,7 @@ const LINE_NB_POINTS = 1000;
 
 const CURVE_DISTANCE = 100;
 const CURVE_AHEAD_CAMERA = 0.008;
-const CURVE_AHEAD_AIRPLANE = 0.02;
+const CURVE_AHEAD_AIRPLANE = 0.08;
 const AIRPLANE_MAX_ANGLE = 35;
 const PROXIMITY_EFFECT_DISTANCE = 42
 
@@ -144,20 +144,7 @@ export const Experience = () => {
 
     const scrollOffset = Math.max(0, scroll.offset)
 
-    // get the scroll speed to affect drone tilt
-    let tilt = (scroll.offset - lastScroll.current) * 10
 
-    tilt = Math.min(tilt, Math.PI / 8)
-    tilt = Math.max(tilt, -Math.PI / 8)
-
-    const targetAirplaneQuaternion = new THREE.Quaternion().setFromEuler(
-      new THREE.Euler(
-        -tilt,
-        airplane.current.rotation.y,
-        airplane.current.rotation.z
-      )
-    );
-    airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
 
     // varaible to track if we are in a proximity effect zone
     let resetCameraRail = true;
@@ -206,6 +193,27 @@ export const Experience = () => {
 
     // get our point to look ahead at ()
     const lookAtPoint = curve.getPoint(Math.min(lerpedScrollOffset + CURVE_AHEAD_CAMERA, 1));
+    const tiltPoint = curve.getPoint(Math.min(lerpedScrollOffset + CURVE_AHEAD_AIRPLANE, 1));
+
+
+    // get the scroll speed to affect drone tilt
+    let tilt = (scroll.offset - lastScroll.current) * 10
+    let pitch = (tiltPoint.x - curPoint.x) * 0.05
+
+    tilt = Math.min(tilt, Math.PI / 8)
+    tilt = Math.max(tilt, -Math.PI / 8)
+    pitch = Math.min(pitch, Math.PI / 8)
+    pitch = Math.max(pitch, -Math.PI / 8)
+
+    const targetAirplaneQuaternion = new THREE.Quaternion().setFromEuler(
+      new THREE.Euler(
+        -tilt,
+        airplane.current.rotation.y,
+        -pitch
+      )
+    );
+    airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
+
 
     // get current look at direction
     const currentLookAt = cameraGroup.current.getWorldDirection(
@@ -270,13 +278,13 @@ export const Experience = () => {
     // airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
 
 
-    if(cameraGroup.current.position.z < curvePoints[2].z + 50){
+    if(cameraGroup.current.position.z < curvePoints[2].z + 30){
       setTurbineDetect(true)
     }
-    if(cameraGroup.current.position.z < curvePoints[3].z + 50){
+    if(cameraGroup.current.position.z < curvePoints[3].z + 30){
       setSolarDetect(true)
     }
-    if(cameraGroup.current.position.z < curvePoints[4].z + 50){
+    if(cameraGroup.current.position.z < curvePoints[4].z + 30){
       setGasDetect(true)
     }
 
