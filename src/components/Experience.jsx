@@ -1,5 +1,5 @@
 import { Cloud, ContactShadows, Float, OrbitControls, PerspectiveCamera, Sky, SoftShadows, useHelper, useScroll } from "@react-three/drei";
-import { useMemo, useRef, useEffect, useLayoutEffect } from "react";
+import { useMemo, useRef, useEffect, useLayoutEffect, useState } from "react";
 import Background from "./Background";
 import { Barn } from "./Barn";
 import { Solar } from "./Solar";
@@ -34,9 +34,12 @@ export const Experience = () => {
   const shadowCam = useRef()
   const dirLight = useRef()
 
-  const {play, setHasScroll, hasScroll, setEnd} = usePlay()
+  const {play, setHasScroll, hasScroll, setEnd, setTurbineDetect, setGasDetect, setSolarDetect} = usePlay()
 
   const debugMode = false
+
+
+
 
   //useHelper(shadowCam, CameraHelper, 1, 'hotpink')
 
@@ -194,7 +197,6 @@ export const Experience = () => {
 
     // update last scroll
     lastScroll.current = lerpedScrollOffset;
-    //tl.current.seek(lerpedScrollOffset * tl.current.duration());
 
     // select the actual point from the index
     const curPoint = curve.getPoint(lerpedScrollOffset);
@@ -267,6 +269,17 @@ export const Experience = () => {
     // );
     // airplane.current.quaternion.slerp(targetAirplaneQuaternion, delta * 2);
 
+
+    if(cameraGroup.current.position.z < curvePoints[2].z + 50){
+      setTurbineDetect(true)
+    }
+    if(cameraGroup.current.position.z < curvePoints[3].z + 50){
+      setSolarDetect(true)
+    }
+    if(cameraGroup.current.position.z < curvePoints[4].z + 50){
+      setGasDetect(true)
+    }
+
     if (
       cameraGroup.current.position.z <
       curvePoints[curvePoints.length - 1].z + 100
@@ -285,6 +298,7 @@ export const Experience = () => {
   const planeOutTl = useRef();
 
   useLayoutEffect(() => {
+
 
     planeTl.current = gsap.timeline()
 
@@ -325,7 +339,7 @@ export const Experience = () => {
 
 
 
-  return (
+  return useMemo(() => (
     <>
       <directionalLight ref={dirLight} castShadow position={[0, 20, -10]} intensity={0.2} shadow-mapSize={3000}>
         <orthographicCamera ref={shadowCam} attach="shadow-camera" args={[-45, 45, -45, 45, 0.1, 75]} />
@@ -418,7 +432,7 @@ export const Experience = () => {
         <OilTank />
       </group>
 
-      
+
 
       {/* LINE */}
       <group position-y={2.8}>
@@ -437,5 +451,5 @@ export const Experience = () => {
         </mesh>
       </group>
     </>
-  );
+  ), []);
 };

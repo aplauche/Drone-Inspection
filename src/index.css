@@ -82,6 +82,7 @@ body {
   width: 80%;
   max-width: 680px;
   position: relative;
+  margin: 32px;
 }
 
 .loaded-percent {
@@ -232,7 +233,17 @@ body {
 /* RESPONSIVE */
 
 @media screen and (max-width: 768px) {
-
+  .overlay-container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    padding: 60px 0px;
+    width: 80%;
+    max-width: 680px;
+    position: relative;
+    margin: 0px;
+  }
 }
 
 

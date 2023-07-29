@@ -9,12 +9,24 @@ Title: Old oil tank
 
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
+import GasDetection from './GasDetection'
 
 export function OilTank(props) {
   const { nodes, materials } = useGLTF('/models/oil-tank.glb')
   return (
+    <group>
+    <GasDetection
+    position={[-1, 3.2, 1.6]}
+    textPosition={[-1, 1.25, 0]}
+    text="LEAK DETECTED"
+  />
+
     <group {...props} dispose={null} scale={0.015} rotation-y={-2.8}>
-      <group rotation={[-Math.PI / 2, 0, 0]}>
+
+
+      <group  rotation={[-Math.PI / 2, 0, 0]}>
+
+
         <mesh   geometry={nodes.Material2.geometry} material={materials.material_5} />
         <mesh  geometry={nodes.Material2_1.geometry} material={materials.material_4} />
         <mesh   geometry={nodes.Material3.geometry} material={materials.material} />
@@ -25,6 +37,8 @@ export function OilTank(props) {
         <lineSegments geometry={nodes.Material2_3.geometry} material={materials.edge_color000255} />
         <lineSegments geometry={nodes.Material2_4.geometry} material={materials.edge_color1098973255} />
       </group>
+    </group>
+          
     </group>
   )
 }
