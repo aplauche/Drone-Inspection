@@ -1,6 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter&display=swap");
-
-
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;700;900&display=swap');
 #root {
   width: 100vw;
   height: 100vh;
@@ -8,7 +6,8 @@
 
 body {
   margin: 0;
-  overscroll-behavior: none !important;;
+  overscroll-behavior: none !important;
+  font-family: 'Rubik', sans-serif;
 }
 
 
@@ -46,7 +45,7 @@ body {
   backdrop-filter: none;
 }
 
-.loader {
+/* .loader {
   position: absolute;
   top: 0;
   left: 0;
@@ -58,83 +57,128 @@ body {
 
 .loader--disappear {
   opacity: 0;
-}
+} */
 
 .intro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: #424f92;
+  transition: all 1s ease-in-out;
+  opacity: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   height: 100%;
+  color: white;
 }
 
-.intro-container {
+.intro.loaded {
+  background: rgb(255, 255, 255, 0.9);
+  background: #424f92bb;
+
+}
+
+.intro.hide-intro {
+  opacity: 0;
+}
+
+.overlay-container {
   display: flex;
   flex-direction: column;
   text-align: center;
   align-items: center;
-  //background: rgb(180,180,180,0.2);
   padding: 60px 32px;
-  //backdrop-filter: blur(24px);
-  width: 90%;
-  max-width: 900px;
-  border-radius: 20px;
+  width: 80%;
+  max-width: 680px;
+  position: relative;
 }
 
-.logo {
-  font-family: sans-serif;
-  color: white;
-  font-size: 4rem;
-  letter-spacing: 0.1rem;
-  padding: 0;
-  margin: 0;
-  transform: translateY(-100%);
+.loaded-percent {
   position: absolute;
-  top: 45vh;
-  animation: fadeUp 2.4s ease-in-out;
-  transition: all 2s ease-in-out;
+  top: 0;
+  left: 0;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+  width: 200px;
+  height: 200px;
 }
 
-.intro--disappear .logo {
-  top: 42px;
-  transform: scale(0.25);
-  transform-origin: center top;
-}
-
-.spinner {
+.loaded-percent span {
+  display: block;
   position: absolute;
   right: 0px;
-  top: 0px;
-  margin-right: -42px;
-  margin-top: -42px;
-  animation: fadeIn 2.4s ease-in-out 1.2s forwards;
-  opacity: 0;
+  top: -8px;
+  transform: translateY(-100%);
+  font-weight: 300;
 }
 
-.spinner__image {
-  width: 164px;
-  height: 164px;
-  background-size: contain;
-  background-image: url("/images/wawa.svg");
-  animation: rotate 10s linear infinite;
+.overlay-container h1 {
+  font-size: 8vw;
+  text-transform: uppercase;
+  font-weight: 300;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.overlay-container h1 strong{
+  /* font-size: 8vw;
+  text-transform: uppercase; */
+  font-weight: 700;
 }
 
-.intro--disappear .spinner {
-  opacity: 1;
-  animation: fadeOut 1s ease-in-out forwards;
+.overlay-container h1.outro__text {
+  font-size: 6vw;
+  margin-bottom: 40px;
+  margin-top: -25%;
+}
+
+.overlay-container .subhead {
+  font-size: 2vw;
+  margin-top: 0;
+  font-weight: 300;
+}
+
+.align-left {
+  text-align: left;
+}
+.align-right {
+  text-align: right;
+  align-self: flex-end;
+}
+
+.verticals {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+
+  margin-top: 50px;
+  margin-bottom: 50px;
+
+  text-transform: uppercase;
+  font-weight: 700;
+  opacity: 0.65;
+  letter-spacing: 1px;
 }
 
 .intro__scroll {
   opacity: 0;
   color: white;
-  font-family: "Inter", sans-serif;
+  font-family: "Rubik", sans-serif;
   font-size: 1rem;
   letter-spacing: 0.05rem;
   position: absolute;
-  top: 24vh;
+  top: 16vh;
+  left: 50%;
+  transform: translateX(-50%);
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.intro--disappear .intro__scroll {
+.intro__scroll.show-scroll {
   animation: fadeIn 1s ease-in-out 1.5s forwards;
 }
 
@@ -143,17 +187,12 @@ body {
 }
 
 .explore {
-  padding: 1rem 2rem;
-  border: none;
-  font-family: "DM Serif Display", serif;
-  font-size: 1.25rem;
-  letter-spacing: 0.25rem;
+  padding: 0.85rem 2rem;
+  font-size: 1rem;
   color: white;
   border: 2px solid white;
   border-radius: 32px;
   cursor: pointer;
-  display: inline-block;
-  margin-top: 320px;
   display: inline-block;
   position: relative;
   z-index: 1;
@@ -162,6 +201,10 @@ body {
   animation: fadeIn 2.4s ease-in-out 2s forwards;
   opacity: 0;
   background: transparent;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: none;
 }
 
 .explore:hover {
@@ -204,11 +247,14 @@ body {
   opacity: 0;
   transition: opacity 4s ease-in-out;
   pointer-events: none;
+  background: #424f92;
+
 }
 
 .outro--appear {
   opacity: 1;
   pointer-events: all;
+  background: #424f92bb;
 }
 
 .outro__text {

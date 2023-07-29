@@ -9,34 +9,42 @@ const Overlay = () => {
 
   return (
     <div className={`overlay ${play && !end ? "overlay--disable" : ""} ${hasScroll ? "overlay--scrolled" : ""}`}>
-      <div className={`loader ${progress === 100 ? "loader--disappear": ''}`} />
-      {progress === 100 && (
-        <div className={`intro ${play ? "intro--disappear" : ""}`}>
-          <div className="intro-container">
-            <h1 className="logo">
-              sUAS Remote Inpection Drone
-              {/* <div className="spinner">
-                <div className="spinner__image"></div>
-              </div> */}
+      {/* <div className={`loader ${progress === 100 ? "loader--disappear": ''}`} /> */}
+
+        <div className={`intro ${play ? "hide-intro" : ""} ${progress === 100 ? "loaded" : ""}`}>
+          <div className="overlay-container">
+            <div className="loaded-percent">
+              <span>{progress.toFixed(0)}% Loaded</span>
+            </div>
+            <h1 className="align-right">
+              Detect <strong>Risk</strong>
             </h1>
-            <p>Monitor and inspect assets remotely in harsh conditions.</p>
+            <p className="align-right subhead">Drone Technology for Remote Inspection</p>
+            <div className="verticals">
+              <p>Wind</p>
+              <p>Solar</p>
+              <p>Gas</p>
+            </div>
             <button 
               className="explore"
               onClick={() => setPlay(true)}
-            >Explore Use Cases</button>
+            >Explore</button>
           </div>
-          <p className="intro__scroll">Scroll to explore</p>
+
 
         </div>
-      )}
+      <p className={`intro__scroll ${play && !end ? "show-scroll" : ""}`}>Scroll to explore</p>
+
       <div className={`outro ${end ? "outro--appear" : ""}`}>
-        <p className="outro__text">Ready to learn more?</p>
-        <a 
-            className="button"
-            href="/"
-          >
-            Replay
-        </a>
+        <div className="overlay-container">
+          <h1 className="outro__text">Report <strong>Sent</strong></h1>
+          <a 
+              className="explore"
+              href="/"
+            >
+              Replay
+          </a>
+        </div>
       </div>
 
     </div>

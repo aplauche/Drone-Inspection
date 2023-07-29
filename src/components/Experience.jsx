@@ -302,8 +302,7 @@ export const Experience = () => {
       airplane.current.position,
       {
         duration: 10,
-        z: -800,
-        y: 10,
+        y: 20,
       },
       0
     );

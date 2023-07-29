@@ -12,7 +12,7 @@ function TextSection({title, subtitle, ...props}) {
         fontSize={0.35}
         maxWidth={2.8}
         lineHeight={1}
-        font={"./fonts/DMSerifDisplay-Regular.ttf"}
+        font={"./fonts/Rubik-Bold.ttf"}
       >
         {title}
         <meshBasicMaterial
