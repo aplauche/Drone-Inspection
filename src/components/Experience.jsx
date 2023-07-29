@@ -328,14 +328,6 @@ export const Experience = () => {
       },
       0
     );
-    planeOutTl.current.to(
-      cameraRail.current.position,
-      {
-        duration: 8,
-        y: 5,
-      },
-      0
-    );
 
   }, []);
 
